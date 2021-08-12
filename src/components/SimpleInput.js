@@ -13,13 +13,17 @@ const SimpleInput = (props) => {
   const formSubmissionHandler = (event) => {
     event.preventDefault();
     // will stop default behavior of browser to sned http request to server
+
+    if (enteredName.trim() == "") {
+      return;
+    }
     console.log(enteredName);
     const enteredValue = nameInputRef.current.value;
     // react refs always has a current property that points at input element
     console.log(enteredValue);
 
     // nameInputRef.current.value = ''; => NOT IDEAL, DON'T MANIPULATE THE DOM
-    setEnteredName('');
+    setEnteredName("");
   };
 
   // In reality wouldn't do both ref and state to get input, differences below
