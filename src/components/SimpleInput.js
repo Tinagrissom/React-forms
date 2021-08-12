@@ -5,6 +5,7 @@ const SimpleInput = (props) => {
 
   const [enteredName, setEnteredName] = useState("");
   // updating enteredName with setEnteredName on change
+  const [enteredNameIsValid, setEnteredNameIsValid] = useState(true);
 
   const nameInputChangeHandler = (event) => {
     setEnteredName(event.target.value);
@@ -15,8 +16,12 @@ const SimpleInput = (props) => {
     // will stop default behavior of browser to sned http request to server
 
     if (enteredName.trim() == "") {
+      setEnteredNameIsValid(false);
       return;
     }
+
+    setEnteredNameIsValid(true);
+
     console.log(enteredName);
     const enteredValue = nameInputRef.current.value;
     // react refs always has a current property that points at input element
@@ -34,9 +39,11 @@ const SimpleInput = (props) => {
   // If you need entered value for instant validation - state might be better
   // State can also reset entered input
 
+  const nameInputClasses = enteredNameIsValid ? 'form-control' : 'form-control invalid'
+
   return (
     <form onSubmit={formSubmissionHandler}>
-      <div className="form-control">
+      <div className={nameInputClasses}>
         <label htmlFor="name">Your Name</label>
         <input
           ref={nameInputRef}
@@ -45,6 +52,7 @@ const SimpleInput = (props) => {
           onChange={nameInputChangeHandler}
           value={enteredName}
         />
+        {!enteredNameIsValid && <p className='error-text'>Name must not be empty</p>}
       </div>
       <div className="form-actions">
         <button>Submit</button>
