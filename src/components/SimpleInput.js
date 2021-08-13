@@ -16,7 +16,7 @@ const SimpleInput = (props) => {
     event.preventDefault();
     // will stop default behavior of browser to sned http request to server
 
-    setEnteredNameTouched(true)
+    setEnteredNameTouched(true);
 
     if (enteredName.trim() === "") {
       setEnteredNameIsValid(false);
