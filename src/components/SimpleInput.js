@@ -42,7 +42,7 @@ const SimpleInput = (props) => {
   // If you need entered value for instant validation - state might be better
   // State can also reset entered input
 
-  // test
+  // test test
 
   const nameInputIsInvalid = !enteredNameIsValid && enteredNameTouched;
 
