@@ -5,21 +5,29 @@ const SimpleInput = (props) => {
 
   const [enteredName, setEnteredName] = useState("");
   // updating enteredName with setEnteredName on change
-  const [enteredNameIsValid, setEnteredNameIsValid] = useState(false);
+  // const [enteredNameIsValid, setEnteredNameIsValid] = useState(false);
   const [enteredNameTouched, setEnteredNameTouched] = useState(false);
+
+  const enteredNameIsValid = enteredName.trim() !== '';
+  const nameInputIsInvalid = !enteredNameIsValid && enteredNameTouched;
 
   const nameInputChangeHandler = (event) => {
     setEnteredName(event.target.value);
+
+    // if (event.target.value.trim() !== "") {
+    //   setEnteredNameIsValid(true);
+    // }
+    // clears the error message on first keystroke
   };
 
   const nameInputBlurHandler = (event) => {
     setEnteredNameTouched(true);
 
-    if (enteredName.trim() === "") {
-      setEnteredNameIsValid(false);
-      return;
-    }
-  }
+    // if (enteredName.trim() === "") {
+    //   setEnteredNameIsValid(false);
+    // }
+    // displays error message if input field is clicked and then clicked out of
+  };
 
   const formSubmissionHandler = (event) => {
     event.preventDefault();
@@ -27,12 +35,10 @@ const SimpleInput = (props) => {
 
     setEnteredNameTouched(true);
 
-    if (enteredName.trim() === "") {
-      setEnteredNameIsValid(false);
+    if (!enteredNameIsValid) {
       return;
     }
-
-    setEnteredNameIsValid(true);
+    // displays error message if form is submitted and input is empty
 
     console.log(enteredName);
     const enteredValue = nameInputRef.current.value;
@@ -40,7 +46,8 @@ const SimpleInput = (props) => {
     console.log(enteredValue);
 
     // nameInputRef.current.value = ''; => NOT IDEAL, DON'T MANIPULATE THE DOM
-    setEnteredName("");
+    setEnteredName('');
+    setEnteredNameTouched(false);
   };
 
   // In reality wouldn't do both ref and state to get input, differences below
@@ -51,9 +58,9 @@ const SimpleInput = (props) => {
   // If you need entered value for instant validation - state might be better
   // State can also reset entered input
 
-  const nameInputIsInvalid = !enteredNameIsValid && enteredNameTouched;
-
-  const nameInputClasses = nameInputIsInvalid ? 'form-control invalid' : 'form-control'
+  const nameInputClasses = nameInputIsInvalid
+    ? "form-control invalid"
+    : "form-control";
 
   return (
     <form onSubmit={formSubmissionHandler}>
@@ -67,7 +74,9 @@ const SimpleInput = (props) => {
           onBlur={nameInputBlurHandler}
           value={enteredName}
         />
-        {nameInputIsInvalid && <p className='error-text'>Name must not be empty</p>}
+        {nameInputIsInvalid && (
+          <p className="error-text">Name must not be empty</p>
+        )}
       </div>
       <div className="form-actions">
         <button>Submit</button>
