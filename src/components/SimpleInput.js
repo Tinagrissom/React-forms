@@ -12,6 +12,15 @@ const SimpleInput = (props) => {
     setEnteredName(event.target.value);
   };
 
+  const nameInputBlurHandler = (event) => {
+    setEnteredNameTouched(true);
+
+    if (enteredName.trim() === "") {
+      setEnteredNameIsValid(false);
+      return;
+    }
+  }
+
   const formSubmissionHandler = (event) => {
     event.preventDefault();
     // will stop default behavior of browser to sned http request to server
@@ -42,8 +51,6 @@ const SimpleInput = (props) => {
   // If you need entered value for instant validation - state might be better
   // State can also reset entered input
 
-  // test test test
-
   const nameInputIsInvalid = !enteredNameIsValid && enteredNameTouched;
 
   const nameInputClasses = nameInputIsInvalid ? 'form-control invalid' : 'form-control'
@@ -57,6 +64,7 @@ const SimpleInput = (props) => {
           type="text"
           id="name"
           onChange={nameInputChangeHandler}
+          onBlur={nameInputBlurHandler}
           value={enteredName}
         />
         {nameInputIsInvalid && <p className='error-text'>Name must not be empty</p>}
