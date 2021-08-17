@@ -1,18 +1,21 @@
 import { useRef, useState } from "react";
 
-const SimpleInput = (props) => {
-  const nameInputRef = useRef();
+import useInput from "../hooks/use-input";
 
-  const [enteredName, setEnteredName] = useState("");
-  // updating enteredName with setEnteredName on change
-  // const [enteredNameIsValid, setEnteredNameIsValid] = useState(false);
-  const [enteredNameTouched, setEnteredNameTouched] = useState(false);
+const SimpleInput = (props) => {
+  const {
+    value: enteredName,
+    isValid: enteredNameIsValid,
+    hasError: nameInputHasError,
+    valueChangeHandler: nameChangeHandler,
+    inputBlurHandler: nameBlurHandler,
+    reset: resetNameInput
+  } = useInput(value => value.trim() !== '');
+
+  const nameInputRef = useRef();
 
   const [enteredEmail, setenteredEmail] = useState("");
   const [enteredEmailTouched, setEnteredEmailTouched] = useState(false);
-
-  const enteredNameIsValid = enteredName.trim() !== "";
-  const nameInputIsInvalid = !enteredNameIsValid && enteredNameTouched;
 
   const enteredEmailIsValid = enteredEmail.includes("@");
   const enteredEmailIsInValid = !enteredEmailIsValid && enteredEmailTouched;
@@ -23,26 +26,8 @@ const SimpleInput = (props) => {
     formIsValid = true;
   }
 
-  const nameInputChangeHandler = (event) => {
-    setEnteredName(event.target.value);
-
-    // if (event.target.value.trim() !== "") {
-    //   setEnteredNameIsValid(true);
-    // }
-    // clears the error message on first keystroke
-  };
-
   const emailInputChangeHandler = (event) => {
     setenteredEmail(event.target.value);
-  };
-
-  const nameInputBlurHandler = (event) => {
-    setEnteredNameTouched(true);
-
-    // if (enteredName.trim() === "") {
-    //   setEnteredNameIsValid(false);
-    // }
-    // displays error message if input field is clicked and then clicked out of
   };
 
   const emailInputBlurHandler = (event) => {
@@ -52,8 +37,6 @@ const SimpleInput = (props) => {
   const formSubmissionHandler = (event) => {
     event.preventDefault();
     // will stop default behavior of browser to sned http request to server
-
-    setEnteredNameTouched(true);
 
     if (!enteredNameIsValid) {
       return;
@@ -66,8 +49,7 @@ const SimpleInput = (props) => {
     console.log(enteredValue);
 
     // nameInputRef.current.value = ''; => NOT IDEAL, DON'T MANIPULATE THE DOM
-    setEnteredName("");
-    setEnteredNameTouched(false);
+    resetNameInput();
 
     setenteredEmail("");
     setEnteredEmailTouched(false);
@@ -81,7 +63,7 @@ const SimpleInput = (props) => {
   // If you need entered value for instant validation - state might be better
   // State can also reset entered input
 
-  const nameInputClasses = nameInputIsInvalid
+  const nameInputClasses = nameInputHasError
     ? "form-control invalid"
     : "form-control";
 
@@ -97,11 +79,11 @@ const SimpleInput = (props) => {
           ref={nameInputRef}
           type="text"
           id="name"
-          onChange={nameInputChangeHandler}
-          onBlur={nameInputBlurHandler}
+          onChange={nameChangeHandler}
+          onBlur={nameBlurHandler}
           value={enteredName}
         />
-        {nameInputIsInvalid && (
+        {nameInputHasError && (
           <p className="error-text">Name must not be empty.</p>
         )}
       </div>
